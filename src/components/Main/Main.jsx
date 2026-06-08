@@ -1,7 +1,6 @@
 import { useState } from "react";
 import avatar from "../../images/avatar.jpg";
 
-// Importar componentes de popup
 import Popup from "./components/Popup/Popup.jsx";
 import NewCard from "./components/NewCard/NewCard.jsx";
 import EditProfile from "./components/EditProfile/EditProfile.jsx";
@@ -60,14 +59,11 @@ const cards = [
   },
 ];
 
-// Para depurar: ver los datos en la consola del navegador
 console.log(cards);
 
 export default function Main() {
-  // Estado para controlar qué popup está abierto
   const [popup, setPopup] = useState(null);
 
-  // Definir los popups disponibles
   const newCardPopup = {
     title: "Nuevo lugar",
     children: <NewCard />,
@@ -83,12 +79,10 @@ export default function Main() {
     children: <EditAvatar />,
   };
 
-  // Función para abrir popup
   function handleOpenPopup(popupData) {
     setPopup(popupData);
   }
 
-  // Función para cerrar popup
   function handleClosePopup() {
     setPopup(null);
   }
@@ -131,7 +125,11 @@ export default function Main() {
       <section className="cards page__section">
         <ul className="cards__list">
           {cards.map((card) => (
-            <Card key={card._id} card={card} />
+            <Card
+              key={card._id}
+              card={card}
+              handleOpenPopup={handleOpenPopup}
+            />
           ))}
         </ul>
       </section>
