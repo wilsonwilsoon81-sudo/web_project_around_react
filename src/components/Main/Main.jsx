@@ -1,6 +1,42 @@
+import { useState } from "react";
 import avatar from "../../images/avatar.jpg";
 
-function Main() {
+// Importar componentes de popup
+import Popup from "./components/Popup/Popup.jsx";
+import NewCard from "./components/NewCard/NewCard.jsx";
+import EditProfile from "./components/EditProfile/EditProfile.jsx";
+import EditAvatar from "./components/EditAvatar/EditAvatar.jsx";
+
+export default function Main() {
+  // Estado para controlar qué popup está abierto
+  const [popup, setPopup] = useState(null);
+
+  // Definir los popups disponibles
+  const newCardPopup = {
+    title: "Nuevo lugar",
+    children: <NewCard />,
+  };
+
+  const editProfilePopup = {
+    title: "Editar perfil",
+    children: <EditProfile />,
+  };
+
+  const editAvatarPopup = {
+    title: "Cambiar foto de perfil",
+    children: <EditAvatar />,
+  };
+
+  // Función para abrir popup
+  function handleOpenPopup(popupData) {
+    setPopup(popupData);
+  }
+
+  // Función para cerrar popup
+  function handleClosePopup() {
+    setPopup(null);
+  }
+
   return (
     <main className="content">
       {/* PROFILE SECTION */}
@@ -12,6 +48,7 @@ function Main() {
             className="profile__edit-avatar"
             aria-label="Editar avatar"
             id="edit-avatar-button"
+            onClick={() => handleOpenPopup(editAvatarPopup)}
           ></button>
         </div>
 
@@ -21,6 +58,7 @@ function Main() {
             aria-label="Editar perfil"
             className="profile__edit-button"
             type="button"
+            onClick={() => handleOpenPopup(editProfilePopup)}
           ></button>
           <p className="profile__description">Explorador</p>
         </div>
@@ -29,6 +67,7 @@ function Main() {
           aria-label="Agregar tarjeta"
           className="profile__add-button"
           type="button"
+          onClick={() => handleOpenPopup(newCardPopup)}
         ></button>
       </section>
 
@@ -38,8 +77,13 @@ function Main() {
           {/* Las tarjetas se renderizarán dinámicamente con React */}
         </ul>
       </section>
+
+      {/* POPUP - Renderizado condicional */}
+      {popup && (
+        <Popup onClose={handleClosePopup} title={popup.title}>
+          {popup.children}
+        </Popup>
+      )}
     </main>
   );
 }
-
-export default Main;
