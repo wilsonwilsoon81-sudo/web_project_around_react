@@ -1,122 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import logo from "./images/logo.svg";
+import avatar from "./images/avatar.jpg";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="page__content">
+      {/* HEADER */}
+      <header className="header page__section">
+        <img
+          alt="Logotipo Around The U.S."
+          className="logo header__logo"
+          src={logo}
+        />
+      </header>
 
-      <div className="ticks"></div>
+      {/* MAIN CONTENT */}
+      <main className="content">
+        {/* PROFILE SECTION */}
+        <section className="profile page__section">
+          <div className="profile__image-container" id="avatar-container">
+            <img className="profile__image" src={avatar} alt="Avatar" />
+            <button
+              type="button"
+              className="profile__edit-avatar"
+              aria-label="Editar avatar"
+              id="edit-avatar-button"
+            ></button>
+          </div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
+          <div className="profile__info">
+            <h1 className="profile__title">Jacques Cousteau</h1>
+            <button
+              aria-label="Editar perfil"
+              className="profile__edit-button"
+              type="button"
+            ></button>
+            <p className="profile__description">Explorador</p>
+          </div>
+
+          <button
+            aria-label="Agregar tarjeta"
+            className="profile__add-button"
+            type="button"
+          ></button>
+        </section>
+
+        {/* CARDS SECTION */}
+        <section className="cards page__section">
+          <ul className="cards__list">
+            {/* Las tarjetas se renderizarán dinámicamente con React */}
           </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* FOOTER */}
+      <footer className="footer page__section">
+        <p className="footer__copyright">© 2025 Around The U.S.</p>
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;
