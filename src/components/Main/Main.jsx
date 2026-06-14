@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../../utils/api.js";
 import avatar from "../../images/avatar.jpg";
 
 import Popup from "./components/Popup/Popup.jsx";
@@ -8,61 +9,20 @@ import EditAvatar from "./components/EditAvatar/EditAvatar.jsx";
 
 import Card from "./components/Card/Card.jsx";
 
-const cards = [
-  {
-    isLiked: false,
-    _id: "5d1f0611d321eb4bdcd707dd",
-    name: "Yosemite Valley",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg",
-    owner: "5d1f0611d321eb4bdcd707dd",
-    createdAt: "2019-07-05T08:10:57.741Z",
-  },
-  {
-    isLiked: false,
-    _id: "5d1f064ed321eb4bdcd707de",
-    name: "Lake Louise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lake-louise.jpg",
-    owner: "5d1f0611d321eb4bdcd707dd",
-    createdAt: "2019-07-05T08:11:58.324Z",
-  },
-  {
-    isLiked: false,
-    _id: "5d1f064ed321eb4bdcd707df",
-    name: "Montañas Calvas",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_bald-mountains.jpg",
-    owner: "5d1f0611d321eb4bdcd707dd",
-    createdAt: "2019-07-05T08:12:20.324Z",
-  },
-  {
-    isLiked: false,
-    _id: "5d1f064ed321eb4bdcd707dg",
-    name: "Alaska",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_latemar.jpg",
-    owner: "5d1f0611d321eb4bdcd707dd",
-    createdAt: "2019-07-05T08:12:45.324Z",
-  },
-  {
-    isLiked: false,
-    _id: "5d1f064ed321eb4bdcd707dh",
-    name: "Parque Nacional de la Vanoise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_vanoise.jpg",
-    owner: "5d1f0611d321eb4bdcd707dd",
-    createdAt: "2019-07-05T08:13:10.324Z",
-  },
-  {
-    isLiked: false,
-    _id: "5d1f064ed321eb4bdcd707di",
-    name: "Lago di Braies",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg",
-    owner: "5d1f0611d321eb4bdcd707dd",
-    createdAt: "2019-07-05T08:13:35.324Z",
-  },
-];
-
-console.log(cards);
-
 export default function Main() {
   const [popup, setPopup] = useState(null);
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    api
+      .getInitialCards()
+      .then((data) => {
+        setCards(data);
+      })
+      .catch((err) => {
+        console.error("Error fetching initial cards:", err);
+      });
+  }, []);
 
   const newCardPopup = {
     title: "Nuevo lugar",
