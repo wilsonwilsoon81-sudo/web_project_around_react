@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import api from "../../utils/api.js";
-import avatar from "../../images/avatar.jpg";
+import CurrentUserContext from "../../contexts/CurrentUserContext.js";
 
 import Popup from "./components/Popup/Popup.jsx";
 import NewCard from "./components/NewCard/NewCard.jsx";
 import EditProfile from "./components/EditProfile/EditProfile.jsx";
 import EditAvatar from "./components/EditAvatar/EditAvatar.jsx";
-
 import Card from "./components/Card/Card.jsx";
 
 export default function Main() {
-  const [popup, setPopup] = useState(null);
+  const currentUser = useContext(CurrentUserContext);
   const [cards, setCards] = useState([]);
+  const [popup, setPopup] = useState(null);
 
   useEffect(() => {
     api
@@ -20,9 +20,37 @@ export default function Main() {
         setCards(data);
       })
       .catch((err) => {
-        console.error("Error fetching initial cards:", err);
+        console.error("Error al cargar las tarjetas:", err);
       });
   }, []);
+
+  async function handleCardLike(card) {
+    const isLiked = card.isLiked;
+
+    try {
+      const newCard = await api.toggleLike(card._id, !isLiked);
+
+      setCards((state) =>
+        state.map((currentCard) =>
+          currentCard._id === card._id ? newCard : currentCard,
+        ),
+      );
+    } catch (error) {
+      console.error("Error al dar/quitar like:", error);
+    }
+  }
+
+  async function handleCardDelete(card) {
+    try {
+      await api.deleteCard(card._id);
+
+      setCards((state) =>
+        state.filter((currentCard) => currentCard._id !== card._id),
+      );
+    } catch (error) {
+      console.error("Error al eliminar tarjeta:", error);
+    }
+  }
 
   const newCardPopup = {
     title: "Nuevo lugar",
@@ -52,7 +80,11 @@ export default function Main() {
       {/* PROFILE SECTION */}
       <section className="profile page__section">
         <div className="profile__image-container" id="avatar-container">
-          <img className="profile__image" src={avatar} alt="Avatar" />
+          <img
+            className="profile__image"
+            src={currentUser.avatar}
+            alt={`Avatar de ${currentUser.name}`}
+          />
           <button
             type="button"
             className="profile__edit-avatar"
@@ -63,14 +95,14 @@ export default function Main() {
         </div>
 
         <div className="profile__info">
-          <h1 className="profile__title">Jacques Cousteau</h1>
+          <h1 className="profile__title">{currentUser.name}</h1>
           <button
             aria-label="Editar perfil"
             className="profile__edit-button"
             type="button"
             onClick={() => handleOpenPopup(editProfilePopup)}
           ></button>
-          <p className="profile__description">Explorador</p>
+          <p className="profile__description">{currentUser.about}</p>
         </div>
 
         <button
@@ -89,12 +121,14 @@ export default function Main() {
               key={card._id}
               card={card}
               handleOpenPopup={handleOpenPopup}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
             />
           ))}
         </ul>
       </section>
 
-      {/* POPUP - Renderizado condicional */}
+      {/* POPUP */}
       {popup && (
         <Popup onClose={handleClosePopup} title={popup.title}>
           {popup.children}

@@ -1,12 +1,27 @@
+import { useContext } from "react";
+import CurrentUserContext from "../../../../contexts/CurrentUserContext.js";
 import Image from "../Image/Image.jsx";
 
 export default function Card(props) {
   const { name, link, isLiked } = props.card;
-  const { handleOpenPopup } = props;
+  const { handleOpenPopup, onCardLike, onCardDelete } = props;
+  const currentUser = useContext(CurrentUserContext);
+
+  const cardLikeButtonClassName = `card__like-button ${
+    isLiked ? "card__like-button_is-active" : ""
+  }`;
 
   const imageComponent = {
     children: <Image link={link} name={name} />,
   };
+
+  function handleLikeClick() {
+    onCardLike(props.card);
+  }
+
+  function handleDeleteClick() {
+    onCardDelete(props.card);
+  }
 
   return (
     <li className="card">
@@ -16,17 +31,21 @@ export default function Card(props) {
         alt={name}
         onClick={() => handleOpenPopup(imageComponent)}
       />
+
       <button
         aria-label="Delete card"
         className="card__delete-button"
         type="button"
+        onClick={handleDeleteClick}
       />
+
       <div className="card__description">
         <h2 className="card__title">{name}</h2>
         <button
           aria-label="Like card"
           type="button"
-          className={`card__like-button ${isLiked ? "card__like-button_is-active" : ""}`}
+          className={cardLikeButtonClassName}
+          onClick={handleLikeClick}
         />
       </div>
     </li>
