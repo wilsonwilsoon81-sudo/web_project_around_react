@@ -47,9 +47,27 @@ function App() {
       });
   }
 
+  function handleUpdateAvatar(data) {
+    api
+      .updateUserAvatar(data.avatar)
+      .then((newData) => {
+        setCurrentUser(newData);
+        handleClosePopup();
+      })
+      .catch((err) => {
+        console.error("❌ Error al actualizar el avatar:", err);
+      });
+  }
+
   return (
     <div className="page__content">
-      <CurrentUserContext.Provider value={{ currentUser, handleUpdateUser }}>
+      <CurrentUserContext.Provider
+        value={{
+          currentUser,
+          handleUpdateUser,
+          onUpdateAvatar: handleUpdateAvatar,
+        }}
+      >
         <Header />
         <Main
           onOpenPopup={handleOpenPopup}
