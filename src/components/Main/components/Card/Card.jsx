@@ -5,7 +5,7 @@ import Image from "../Image/Image.jsx";
 export default function Card(props) {
   const { name, link, isLiked } = props.card;
   const { onOpenPopup, onCardLike, onCardDelete } = props;
-  const { currentUser } = useContext(CurrentUserContext);
+  const currentUser = useContext(CurrentUserContext);
 
   const cardLikeButtonClassName = `card__like-button ${
     isLiked ? "card__like-button_is-active" : ""

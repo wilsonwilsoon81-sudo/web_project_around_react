@@ -1,5 +1,4 @@
-import { useState, useEffect, useContext } from "react";
-import api from "../../utils/api.js";
+import { useContext } from "react";
 import CurrentUserContext from "../../contexts/CurrentUserContext.js";
 
 import Popup from "./components/Popup/Popup.jsx";
@@ -8,53 +7,19 @@ import EditProfile from "./components/EditProfile/EditProfile.jsx";
 import EditAvatar from "./components/EditAvatar/EditAvatar.jsx";
 import Card from "./components/Card/Card.jsx";
 
-export default function Main({ onOpenPopup, onClosePopup, popup }) {
+export default function Main({
+  cards,
+  onCardLike,
+  onCardDelete,
+  onAddPlace,
+  onOpenPopup,
+  onClosePopup,
+  popup,
+}) {
   const { currentUser } = useContext(CurrentUserContext);
-
-  const [cards, setCards] = useState([]);
-
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then((data) => {
-        setCards(data);
-      })
-      .catch((err) => {
-        console.error("Error al cargar las tarjetas:", err);
-      });
-  }, []);
-
-  async function handleCardLike(card) {
-    const isLiked = card.isLiked;
-
-    try {
-      const newCard = await api.toggleLike(card._id, !isLiked);
-
-      setCards((state) =>
-        state.map((currentCard) =>
-          currentCard._id === card._id ? newCard : currentCard,
-        ),
-      );
-    } catch (error) {
-      console.error("Error al dar/quitar like:", error);
-    }
-  }
-
-  async function handleCardDelete(card) {
-    try {
-      await api.deleteCard(card._id);
-
-      setCards((state) =>
-        state.filter((currentCard) => currentCard._id !== card._id),
-      );
-    } catch (error) {
-      console.error("Error al eliminar tarjeta:", error);
-    }
-  }
-
   const newCardPopup = {
     title: "Nuevo lugar",
-    children: <NewCard />,
+    children: <NewCard onAddPlace={onAddPlace} />,
   };
 
   const editProfilePopup = {
@@ -104,22 +69,21 @@ export default function Main({ onOpenPopup, onClosePopup, popup }) {
         ></button>
       </section>
 
-      {/* CARDS SECTION */}
       <section className="cards page__section">
         <ul className="cards__list">
-          {cards.map((card) => (
-            <Card
-              key={card._id}
-              card={card}
-              onOpenPopup={onOpenPopup}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-            />
-          ))}
+          {Array.isArray(cards) &&
+            cards.map((card) => (
+              <Card
+                key={card._id}
+                card={card}
+                onOpenPopup={onOpenPopup}
+                onCardLike={onCardLike}
+                onCardDelete={onCardDelete}
+              />
+            ))}
         </ul>
       </section>
 
-      {/* POPUP */}
       {popup && (
         <Popup onClose={onClosePopup} title={popup.title}>
           {popup.children}

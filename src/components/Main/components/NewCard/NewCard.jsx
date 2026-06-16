@@ -1,39 +1,63 @@
-export default function NewCard() {
+import { useState } from "react";
+
+export default function NewCard({ onAddPlace }) {
+  const [name, setName] = useState("");
+  const [link, setLink] = useState("");
+
+  function handleNameChange(e) {
+    setName(e.target.value);
+  }
+
+  function handleLinkChange(e) {
+    setLink(e.target.value);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    onAddPlace({ name, link });
+
+    setName("");
+    setLink("");
+  }
+
   return (
     <form
       className="popup__form"
-      name="card-form"
-      id="new-card-form"
+      name="new-place-form"
+      id="new-place-form"
       noValidate
+      onSubmit={handleSubmit}
     >
-      <label className="popup__field">
+      <label className="popup__label">
         <input
-          className="popup__input popup__input_type_card-name"
-          id="card-name"
+          className="popup__input popup__input_type_name"
+          id="place-name"
           maxLength="30"
-          minLength="1"
-          name="card-name"
-          placeholder="Título"
+          minLength="2"
+          name="name"
+          placeholder="Nombre del lugar"
           required
           type="text"
+          value={name}
+          onChange={handleNameChange}
         />
-        <span className="popup__error" id="card-name-error"></span>
+        <span className="popup__error" id="place-name-error"></span>
       </label>
-
-      <label className="popup__field">
+      <label className="popup__label">
         <input
           className="popup__input popup__input_type_url"
-          id="card-link"
+          id="place-link"
           name="link"
           placeholder="Enlace a la imagen"
           required
           type="url"
+          value={link}
+          onChange={handleLinkChange}
         />
-        <span className="popup__error" id="card-link-error"></span>
+        <span className="popup__error" id="place-link-error"></span>
       </label>
-
       <button className="button popup__button" type="submit">
-        Crear
+        Guardar
       </button>
     </form>
   );
