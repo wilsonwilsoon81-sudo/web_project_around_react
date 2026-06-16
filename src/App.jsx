@@ -14,6 +14,16 @@ function App() {
     _id: "",
   });
 
+  const [popup, setPopup] = useState(null);
+
+  function handleOpenPopup(popupData) {
+    setPopup(popupData);
+  }
+
+  function handleClosePopup() {
+    setPopup(null);
+  }
+
   useEffect(() => {
     api
       .getUserInfo()
@@ -25,12 +35,27 @@ function App() {
       });
   }, []);
 
+  function handleUpdateUser(data) {
+    api
+      .updateUserInfo(data.name, data.about)
+      .then((newData) => {
+        setCurrentUser(newData);
+        handleClosePopup();
+      })
+      .catch((err) => {
+        console.error("❌ Error al actualizar el usuario:", err);
+      });
+  }
+
   return (
     <div className="page__content">
-      {}
-      <CurrentUserContext.Provider value={currentUser}>
+      <CurrentUserContext.Provider value={{ currentUser, handleUpdateUser }}>
         <Header />
-        <Main />
+        <Main
+          onOpenPopup={handleOpenPopup}
+          onClosePopup={handleClosePopup}
+          popup={popup}
+        />
         <Footer />
       </CurrentUserContext.Provider>
     </div>
