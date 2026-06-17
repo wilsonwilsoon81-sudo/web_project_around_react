@@ -6,6 +6,7 @@ export default function EditProfile() {
 
   const [name, setName] = useState(currentUser.name);
   const [description, setDescription] = useState(currentUser.about);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleNameChange(event) {
     setName(event.target.value);
@@ -15,10 +16,13 @@ export default function EditProfile() {
     setDescription(event.target.value);
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  function handleSubmit(e) {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-    handleUpdateUser({ name, about: description });
+    handleUpdateUser({ name, about: description }).finally(() => {
+      setIsSubmitting(false);
+    });
   }
 
   return (
@@ -59,8 +63,12 @@ export default function EditProfile() {
         />
         <span className="popup__error" id="owner-description-error"></span>
       </label>
-      <button className="button popup__button" type="submit">
-        Guardar
+      <button
+        className="button popup__button"
+        type="submit"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Guardando..." : "Guardar"}
       </button>
     </form>
   );

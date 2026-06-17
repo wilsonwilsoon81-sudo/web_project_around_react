@@ -7,13 +7,13 @@ import Footer from "./components/Footer/Footer.jsx";
 
 function App() {
   const [currentUser, setCurrentUser] = useState({
-    name: "Jacques Cousteau",
-    about: "Explorador",
-    avatar:
-      "https://myhero.com/content/images/thumbs/0124822_jacques-cousteau.jpeg",
+    name: "",
+    about: "",
+    avatar: "",
     _id: "",
   });
 
+  const [isLoading, setIsLoading] = useState(true);
   const [cards, setCards] = useState([]);
   const [popup, setPopup] = useState(null);
 
@@ -26,31 +26,29 @@ function App() {
   }
 
   useEffect(() => {
-    api
-      .getUserInfo()
-      .then((data) => {
-        console.log("✅ Datos del usuario cargados:", data);
-        setCurrentUser(data);
-      })
-      .catch((err) => {
-        console.error("❌ Error al cargar el usuario:", err);
-      });
-  }, []);
+    console.log("🔄 Iniciando carga inicial...");
+    setIsLoading(true);
 
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setCards(data);
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([userData, cardsData]) => {
+        console.log("✅ Usuario cargado:", userData);
+        console.log("✅ Tarjetas cargadas:", cardsData);
+
+        setCurrentUser(userData);
+
+        if (Array.isArray(cardsData)) {
+          setCards(cardsData);
         } else {
-          console.warn("La API no devolvió un array:", data);
+          console.warn("Las tarjetas no son un array:", cardsData);
           setCards([]);
         }
       })
       .catch((err) => {
-        console.error("Error al cargar las tarjetas:", err);
-        setCards([]);
+        console.error("❌ Error al cargar datos iniciales:", err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+        console.log("✅ Carga completada, isLoading = false");
       });
   }, []);
 
@@ -80,7 +78,7 @@ function App() {
   }
 
   function handleAddPlaceSubmit(cardData) {
-    api
+    return api
       .addNewCard(cardData.name, cardData.link)
       .then((newCard) => {
         setCards([newCard, ...cards]);
@@ -90,7 +88,8 @@ function App() {
   }
 
   function handleUpdateUser(data) {
-    api
+    console.log("📤 Enviando a la API:", data);
+    return api
       .updateUserInfo(data.name, data.about)
       .then((newData) => {
         setCurrentUser(newData);
@@ -102,7 +101,7 @@ function App() {
   }
 
   function handleUpdateAvatar(data) {
-    api
+    return api
       .updateUserAvatar(data.avatar)
       .then((newData) => {
         setCurrentUser(newData);
@@ -125,6 +124,7 @@ function App() {
         <Header />
         <Main
           cards={cards}
+          isLoading={isLoading}
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
           onAddPlace={handleAddPlaceSubmit}

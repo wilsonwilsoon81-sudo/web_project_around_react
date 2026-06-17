@@ -3,6 +3,7 @@ import { useState } from "react";
 export default function NewCard({ onAddPlace }) {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleNameChange(e) {
     setName(e.target.value);
@@ -14,10 +15,13 @@ export default function NewCard({ onAddPlace }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    onAddPlace({ name, link });
+    setIsSubmitting(true);
 
-    setName("");
-    setLink("");
+    onAddPlace({ name, link }).finally(() => {
+      setIsSubmitting(false);
+      setName("");
+      setLink("");
+    });
   }
 
   return (
@@ -56,8 +60,12 @@ export default function NewCard({ onAddPlace }) {
         />
         <span className="popup__error" id="place-link-error"></span>
       </label>
-      <button className="button popup__button" type="submit">
-        Guardar
+      <button
+        className="button popup__button"
+        type="submit"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Guardando..." : "Guardar"}
       </button>
     </form>
   );
