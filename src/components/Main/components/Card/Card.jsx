@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import CurrentUserContext from "../../../../contexts/CurrentUserContext.js";
-import Image from "../Image/Image.jsx";
+import ImagePopup from "../../../ImagePopup/ImagePopup.jsx";
 
 export default function Card(props) {
   const { name, link, isLiked } = props.card;
@@ -12,7 +12,7 @@ export default function Card(props) {
   }`;
 
   const imageComponent = {
-    children: <Image link={link} name={name} />,
+    children: <ImagePopup link={link} name={name} />,
   };
 
   function handleLikeClick() {
