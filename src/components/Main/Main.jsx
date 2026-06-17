@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import CurrentUserContext from "../../contexts/CurrentUserContext.js";
-
+import ImagePopup from "../ImagePopup/ImagePopup.jsx";
 import Popup from "./components/Popup/Popup.jsx";
 import NewCard from "./components/NewCard/NewCard.jsx";
 import EditProfile from "./components/EditProfile/EditProfile.jsx";
