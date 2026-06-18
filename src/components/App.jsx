@@ -26,14 +26,10 @@ function App() {
   }
 
   useEffect(() => {
-    console.log("🔄 Iniciando carga inicial...");
     setIsLoading(true);
 
     Promise.all([api.getUserInfo(), api.getInitialCards()])
       .then(([userData, cardsData]) => {
-        console.log("✅ Usuario cargado:", userData);
-        console.log("✅ Tarjetas cargadas:", cardsData);
-
         setCurrentUser(userData);
 
         if (Array.isArray(cardsData)) {
@@ -48,7 +44,6 @@ function App() {
       })
       .finally(() => {
         setIsLoading(false);
-        console.log("✅ Carga completada, isLoading = false");
       });
   }, []);
 
@@ -88,7 +83,6 @@ function App() {
   }
 
   function handleUpdateUser(data) {
-    console.log("📤 Enviando a la API:", data);
     return api
       .updateUserInfo(data.name, data.about)
       .then((newData) => {
